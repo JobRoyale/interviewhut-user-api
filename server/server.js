@@ -2,6 +2,7 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 const express = require('express');
 const os = require('os');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const mainRouter = require('./routes/main');
 const usersRouter = require('./routes/users');
 
@@ -21,6 +22,8 @@ const PORT = process.env.SERVER_PORT || 5000;
 
 const app = express();
 app.use(express.json());
+
+app.use(cookieParser());
 
 app.use('/', mainRouter);
 app.use('/users', usersRouter);
