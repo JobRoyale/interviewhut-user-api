@@ -108,7 +108,71 @@ const signUpUser = (req, res) => {
   }
 };
 
-const loginUser = (req, res) => {};
+const loginUser = (req, res) => {
+  try {
+    if (req.body.issuer === 'google') {
+      googleAuth(req.body.accessToken)
+        .then((data) => {
+          User.find({ email: data.email })
+            .exec()
+            .then((user) => {
+              if (user.length >= 1) {
+                res.cookie(
+                  'interviewhut_rtk',
+                  getRefreshToken(user[0]),
+                  getCookieOptions(604800000)
+                );
+                res.cookie(
+                  'interviewhut_u',
+                  getUserNameToken(user[0]),
+                  getCookieOptions(604800000)
+                );
+                res.status(200).json({
+                  status: true,
+                  payload: {
+                    message: SERVER_RESPONSE.LOGIN,
+                    accessToken: getAccessToken(user[0]),
+                  },
+                });
+              } else {
+                res.status(403).json({
+                  status: false,
+                  payload: {
+                    message: SERVER_RESPONSE.REGISTER,
+                  },
+                });
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              res.status(500).json({
+                status: false,
+                payload: { message: SERVER_RESPONSE.ERROR },
+              });
+            });
+        })
+        .catch((error) => {
+          res.status(401).json({
+            status: false,
+            payload: {
+              message: SERVER_RESPONSE.ERRORTOKEN,
+            },
+          });
+        });
+    } else {
+      res.status(500).json({
+        status: false,
+        payload: { message: SERVER_RESPONSE.ERROR },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: false,
+      payload: { message: SERVER_RESPONSE.ERROR },
+    });
+  }
+};
 
 const logoutUser = (req, res) => {};
 
