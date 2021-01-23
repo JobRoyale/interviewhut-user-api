@@ -12,7 +12,7 @@ const SERVER_RESPONSE = require('../utils/serverResponses');
 const signUpUser = (req, res) => {
   try {
     if (req.body.issuer === 'google') {
-      googleAuth(req.body.accesToken)
+      googleAuth(req.body.accessToken)
         .then((data) => {
           User.find({ email: data.email })
             .exec()
@@ -49,7 +49,7 @@ const signUpUser = (req, res) => {
                   firstname: data.given_name,
                   lastname: data.family_name,
                   email: data.email,
-                  password: hashedPassword,
+                  password: hashPassword,
                   issuer: req.body.issuer,
                   signUpType: req.body.signUpType,
                   profilePic: data.picture,
@@ -60,7 +60,9 @@ const signUpUser = (req, res) => {
                   .then(() => {
                     res.status(201).json({
                       status: true,
-                      payload: SERVER_RESPONSE.CREATED,
+                      payload: {
+                        message: SERVER_RESPONSE.CREATED,
+                      },
                     });
                   })
                   .catch((error) => {
@@ -82,7 +84,8 @@ const signUpUser = (req, res) => {
               });
             });
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error);
           res.status(401).json({
             status: false,
             payload: { message: SERVER_RESPONSE.ERRORTOKEN },
