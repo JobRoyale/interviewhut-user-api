@@ -30,7 +30,7 @@ const getAccessToken = (user) => {
 const getRefreshToken = (user) => {
   const refreshToken = jwt.sign(
     { email: user.email, username: user.username },
-    REFRESH_TOKEN_SECRET + user.username,
+    REFRESH_TOKEN_SECRET + user.password,
     { expiresIn: REFRESH_TOKEN_EXPIRY_TIME }
   );
   return refreshToken;

@@ -1,14 +1,16 @@
 const express = require('express');
+const { auth } = require('google-auth-library');
 const {
   signUpUser,
   loginUser,
   logoutUser,
 } = require('../controllers/userController');
+const authRequest = require('../middlewares/authRequest');
 
 const usersRouter = express.Router();
 
 usersRouter.post('/signup', signUpUser);
 usersRouter.post('/login', loginUser);
-usersRouter.get('/logout', logoutUser);
+usersRouter.get('/logout', authRequest, logoutUser);
 
 module.exports = usersRouter;
