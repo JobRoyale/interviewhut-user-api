@@ -8,7 +8,7 @@ const cors = require('cors');
 const mainRouter = require('./routes/main');
 const usersRouter = require('./routes/users');
 
-const PORT = process.env.SERVER_PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 (async () => {
   try {
