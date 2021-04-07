@@ -27,7 +27,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-const whitelist = ['http://localhost:3000'];
+const whitelist = ['http://localhost:3000', 'https://interviewhut.netlify.app'];
 
 const corsOptions = {
   origin: function (origin, callback) {
